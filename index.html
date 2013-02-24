@@ -1,0 +1,318 @@
+<html>
+<head>
+
+	<title>Beer Softball League</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
+	<!--<link rel="stylesheet" type="text/css" href="css/stylesheet.css"> -->
+	<script type="text/javascript" src="js/jquery.min.js"></script>	
+	<script src="js/bootstrap.js"></script>
+	<script src="js/jquery.validate.js"></script>
+	
+
+
+</head>
+<body>
+<body>
+   <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="./index.html"><!-- Bootstrap --></a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="./index.html">Home</a>
+              </li>
+              <li class="">
+                <!-- <a href="./getting-started.html">Add Your Team</a> -->
+
+                <a href= "#myModal" data-target= "#create_team"  data-toggle="modal">Add Your Team</a>
+
+              </li>
+              <li class="">
+                <a href="./scaffolding.html">Standings</a>
+              </li>
+              <li class="">
+                <a href="./base-css.html">Weekly Results</a>
+              </li>
+              <li class="active">
+                <a href="./components.html">Team Page</a>
+              </li>
+              <li class="dropdown-submenu">
+                <a href="./customize.html">Dropdown</a>
+                	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                		<li><a tabindex="-1" href="#">Action</a></li>
+    					<li><a tabindex="-1" href="#">Another action</a></li>
+    					<li><a tabindex="-1" href="#">Something else here</a></li>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<!-- end of Nav Bar -->	
+
+
+	<div class="clearfix"></div>
+	<div class="container">
+		<div class="row-fluid" style="text-align: center;">
+			<br/><br/>
+			<h1>Standings</h1>
+		</div>
+
+<!-- 		Standings Heading    -->
+		<div class="row-fluid">
+			<table id="standings" class="span10 offset1">
+				<tr><th>Team</th><th>Wins</th><th>Loses</th><th>Season W/L%</th></tr>
+			</table>
+		</div> <!-- end table row -->
+
+
+
+    <div class="row"> <!--content-->
+      <div class="span10">
+
+      <div class="playing">
+        <div class="row">
+          <!--Teams-->
+          <div class="span2">
+<!--             <img src="img/beer-icon.png"></img>
+ -->          </div>
+          <div class="span8 teams">
+             <h3>Teams Playing this Year</h3>
+               <div id="teamList">
+               <!-- This will be populated by function populateTeamList -->
+               </div>
+
+
+
+
+
+
+
+<!-- Create the Modal Team Form Entry -->
+
+	<div id="create_team" class="modal hide fade">
+		<div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3>Register Your Team</h3>
+		</div>
+		<div class="modal-body">
+			<form id="modal_form" class="form-horizontal">
+				<div class="control-group">
+			    	<label class="control-label" for="teamname">Team Name</label>
+			    		<div class="controls">
+			      			<input type="text" class="team_inputs" id="teamName" name="teamname" placeholder="i.e. Cowboys">
+			    		</div>
+			  	</div>
+
+
+		<div class="control-group">
+			<label class="control-label" for="firstname">Manager</label>
+			  	<div class="controls">
+				  	<form class="form-inline">
+							<input type="text" class="input-small team_inputs" id="firstName" name="firstname" placeholder="firstname" >
+				      		<input type="text" class="input-large team_inputs" id="lastName" name="lastname" placeholder="lastname">
+				     </form>
+			     </div>
+		</div>
+			  
+		<div class="control-group">
+			<label class="control-label" for="phone">Phone Number</label>
+			    <div class="controls">
+			      	<input type="text" id="phone" class="team_inputs" name="phone" placeholder="555-555-1234">
+			   </div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="phone">Email</label>
+			    <div class="controls">
+			      	<input type="text" id="email" class="team_inputs" name="phone" placeholder="your@emailaddress">
+			   </div>
+		</div>
+			  
+		<div class="control-group">
+			<label class="control-label" for="sponsor">Team Sponsor</label>
+			    <div class="controls">
+			      	<input type="text" class="team_inputs" id="sponsor" name="sponsor" placeholder="Cool Springs Brewery">
+			    </div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="zipcode">Zipcode</label>
+			    <div class="controls">
+			      	<input type="text" class="team_inputs" id="zipcode" name="zipcode" placeholder="75252" >
+			    </div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+			      <button id="createTeam" type="submit" class="btn" data-dismiss="modal" aria-hidden="true" onclick="addTeam()"> Submit</button>
+			</div>
+		</div>
+			</form>
+		</div>
+	</div>	  <!-- End of Team Modal Form -->
+
+<script>
+// ==================================================
+//           The Array Way
+// ==================================================
+	// $(document).ready(function(){
+	// 	var league_array=[];
+	// 	$("#createTeam").click(function(){
+	// 		var team_array=[];
+	// 		$(".team_inputs").each(function(){
+	// 			team_array.push($(this).val());
+	// 		}); //close team array
+	// 		league_array.push(team_array);
+	// 		console.log(league_array);
+	// 		printTeam(team_array);
+	// 		clearForm();
+	// 	}); //close click
+	// 	function printTeam(team_array){
+	// 		$("#standings").append("<tr><th>" + team_array[0] + "</th></tr>");
+	// 	};
+	// 	function clearForm(){
+	// 		$(".team_inputs").each(function(){
+	// 			$(this).val("");
+	// 		});
+	// 	};
+
+	// });
+//console.log(team_array);
+// ==================================================
+//          END: The Array Way
+// ==================================================
+
+
+// ==================================================
+//          Load existing team data
+// ==================================================
+$(document).ready(function () {
+  // get from database: Purpose, fill array with data if exists
+  $.ajax({
+    url: 'backliftapp/teamInfo',
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      leagueAll = data;
+      for (var i = 0; i < data.length; i++) {
+        addTeamToTable(data[i]);
+        populateTeamList(data[i]);
+      }
+      // doPopovers();
+      // track("Json init!");
+      // track("Teams loaded!");
+    }
+  }); // end ajax
+}); // end ready
+// ==================================================
+//          END: Load existing team data
+// ==================================================
+
+
+// ==================================================
+// Add team info from form to backlift JSON data file
+// ==================================================
+var leagueAll = [];
+
+// add team to league
+function addTeam() {
+
+  var teamInfo = {
+    teamName: $("#teamName").val(),
+    firstName: $("#firstName").val(),
+    lastName: $("#lastName").val(),
+    phone: $("#phone").val(),
+    email: $("#email").val(),
+    sponsor: $("#sponsor").val(),
+    zipcode: $("zipcode").val(),
+    week01runs: 0,
+    week02runs: 0,
+    week03runs: 0,
+    week04runs: 0,
+    week05runs: 0,
+    week06runs: 0,
+    totalWins: (((Math.floor)(Math.random()*11))+1),   //random number generated at this time
+    totalLosses: (((Math.floor)(Math.random()*6))+1)
+  };
+
+  $.ajax({
+    url: 'backliftapp/teamInfo',
+    type: "POST",
+    dataType: "json",
+    data: teamInfo,
+    success: function (data) {
+      // console.dir(data);
+      leagueAll.push(data);
+      addTeamToTable(data);
+      populateTeamList(data);
+      // doPopovers();
+      //put teamInfo in the table of teams
+      // track(data.name + " saved to database!");
+    }
+  });
+
+}; // end add team
+
+function addTeamToTable(team) {
+  $(
+    "<tr>" +
+    // "<td>" + team.id + "</td>" +
+    "<td><span class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span>" +
+    // "<p class='more'><br>" +
+    // "Manager: " + team.firstName + " " + team.lastName + "<br>" +
+    // "Phone: " + team.phone + "<br>" +
+    // "E-mail: " + team.email + "<br></p>" +
+    // "</td>" +
+    // "<td>" + team.week01runs + "</td>" +
+    // "<td>" + team.week02runs + "</td>" +
+    // "<td>" + team.week03runs + "</td>" +
+    // "<td>" + team.week04runs + "</td>" +
+    // "<td>" + team.week05runs + "</td>" +
+    // "<td>" + team.week06runs + "</td>" +
+    "<td>" + team.totalWins + "</td>" +
+    "<td>" + team.totalLosses + "</td>" +
+    //"<td>" + "workingOnCalculating" + "</td>" +
+    "<td>" + wlPercent(team) + "</td>" +
+    "</tr>").appendTo('#standings'); //tbody
+};
+
+function populateTeamList(team) {
+  $(
+    "<h4 class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + " </h4>" + 
+    "<p class='more'>" +
+    "Manager: " + team.firstName + " " + team.lastName + "<br>" +
+    "Phone: " + team.phone + "<br>" +
+    "E-mail: " + team.email + "<br>" +
+    //"<a class='manage deleteTeam'>Delete Team</a>" +
+    "</p>").appendTo('#teamList');
+};
+
+function wlPercent(team){
+	wl = ((+team.totalWins)/((+team.totalWins)+(+team.totalLosses)));
+	if(isNaN(wl)){
+		return "No Games Played"
+	}
+	else {
+		return wl.toFixed(3)
+
+	}
+};
+
+	</script>
+	
+
+
+
+
+
+</body>
+</html>

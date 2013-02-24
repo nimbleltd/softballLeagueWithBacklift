@@ -1,0 +1,110 @@
+{"teams":[
+        {
+            "teamName":"Cardinals",
+            "firstName":"Ray",
+            "lastName":"Villalobos",
+            "sponsor":"Cool Springs Brewery",
+            "contact": {
+                "phone":"(615) 555-1357",
+                "zipcode":"37214"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        },
+        {
+            "teamName":"Rangers",
+            "firstName":"John",
+            "lastName":"Jones",
+            "sponsor":"Turtle Anarchy",
+            "contact": {
+                "phone":"(615) 555-0864",
+                "zipcode":"37215"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        },
+                {
+            "teamName":"Royals",
+            "firstName":"Mike",
+            "lastName":"Michaels",
+            "sponsor":"Soccer USA",
+            "contact": {
+                "phone":"(615) 555-8456",
+                "zipcode":"37213"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        },
+                {
+            "teamName":"Mariners",
+            "firstName":"Dustin",
+            "lastName":"Dusty",
+            "sponsor":"Joslin's Plumbing",
+            "contact": {
+                "phone":"(615) 555-2534",
+                "zipcode":"37216"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        },
+                {
+            "teamName":"Mets",
+            "firstName":"Desmond",
+            "lastName":"Dezirae",
+            "sponsor":"All Seasons",
+            "contact": {
+                "phone":"(615) 555-5763",
+                "zipcode":"37219"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        },
+                {
+            "teamName":"Giants",
+            "firstName":"Chris",
+            "lastName":"Christopherson",
+            "sponsor":"All Seasons",
+            "contact": {
+                "phone":"(615) 555-6453",
+                "zipcode":"37219"
+            },
+            "runsRecord": {
+                "week01":"7"
+                "week02":"4"
+                "week03":"3"
+                "week04":"6"
+                "week05":"1"
+                "week06":"14"
+            },
+        }
+]}
