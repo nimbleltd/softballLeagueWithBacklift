@@ -87,7 +87,8 @@
 <!--             <img src="img/beer-icon.png"></img>
  -->          </div>
           <div class="span8 teams">
-             <h3>Teams Playing this Year</h3>
+            <!-- <div class="row-fluid" style="text-align: center;"> -->
+             <h3>Active Teams</h3>
                <div id="teamList">
                <!-- This will be populated by function populateTeamList -->
                </div>
@@ -266,7 +267,7 @@ function addTeamToTable(team) {
   $(
     "<tr>" +
     // "<td>" + team.id + "</td>" +
-    "<td><span class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span>" +
+    "<th><span class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
     // "<p class='more'><br>" +
     // "Manager: " + team.firstName + " " + team.lastName + "<br>" +
     // "Phone: " + team.phone + "<br>" +
@@ -278,10 +279,10 @@ function addTeamToTable(team) {
     // "<td>" + team.week04runs + "</td>" +
     // "<td>" + team.week05runs + "</td>" +
     // "<td>" + team.week06runs + "</td>" +
-    "<td>" + team.totalWins + "</td>" +
-    "<td>" + team.totalLosses + "</td>" +
+    "<th>" + team.totalWins + "</th>" +
+    "<th>" + team.totalLosses + "</th>" +
     //"<td>" + "workingOnCalculating" + "</td>" +
-    "<td>" + wlPercent(team) + "</td>" +
+    "<th>" + wlPercent(team) + "</th>" +
     "</tr>").appendTo('#standings'); //tbody
 };
 
@@ -292,7 +293,8 @@ function populateTeamList(team) {
     "Manager: " + team.firstName + " " + team.lastName + "<br>" +
     "Phone: " + team.phone + "<br>" +
     "E-mail: " + team.email + "<br>" +
-    //"<a class='manage deleteTeam'>Delete Team</a>" +
+    "<button aria-hidden='true' class='btn' onclick='deleteTeam(\"" + team.id + "\")'>Delete Team "+ team.teamName + "</button>" + "<br>" +
+    "Team ID = " + team.id +
     "</p>").appendTo('#teamList');
 };
 
@@ -302,10 +304,26 @@ function wlPercent(team){
 		return "No Games Played"
 	}
 	else {
-		return wl.toFixed(3)
-
+		var formatWL = (wl.toFixed(3)).toString().replace(/^0+/, '')
+		return formatWL
 	}
 };
+function deleteTeam(id) {
+  console.log(id)
+  var conf = confirm("Are you sure you want to delete this team?");
+  if (conf == true) {
+    $.ajax({
+      url: "backliftapp/teamInfo/" + id,
+      type: "DELETE",
+      dataType: "json",
+    });
+  //track("deleted: " + id)
+  //$(this).closest('tr').remove()
+  }
+};
+
+
+
 
 	</script>
 	
