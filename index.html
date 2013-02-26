@@ -33,7 +33,9 @@
               <li class="">
                 <!-- <a href="./getting-started.html">Add Your Team</a> -->
 
-                <a href= "#myModal" data-target= "#create_team"  data-toggle="modal">Add Your Team</a>
+                <!-- <a href= "#myModal" data-target= "#create_team" data-toggle="modal">Add Your Team</a> -->
+
+                <a href= "#myModal" data-target= "#create_team"  onclick="howManyTeams()" data-toggle="modal">Add Your Team</a>
 
               </li>
               <li class="">
@@ -223,10 +225,8 @@ $(document).ready(function () {
 // Add team info from form to backlift JSON data file
 // ==================================================
 var leagueAll = [];
-
 // add team to league
 function addTeam() {
-
   var teamInfo = {
     teamName: $("#teamName").val(),
     firstName: $("#firstName").val(),
@@ -284,7 +284,8 @@ function addTeamToTable(team) {
     //"<td>" + "workingOnCalculating" + "</td>" +
     "<th>" + wlPercent(team) + "</th>" +
     "</tr>").appendTo('#standings'); //tbody
-};
+
+}; // end addTeamToTable
 
 function populateTeamList(team) {
   $(
@@ -296,6 +297,20 @@ function populateTeamList(team) {
     "<button aria-hidden='true' class='btn' onclick='deleteTeam(\"" + team.id + "\")'>Delete Team "+ team.teamName + "</button>" + "<br>" +
     "Team ID = " + team.id +
     "</p>").appendTo('#teamList');
+};
+
+function howManyTeams(){
+  $.ajax({
+    url: 'backliftapp/teamInfo',
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      if (data.length>=6){
+       return data.length 
+      }
+        return data.length
+    }
+  })
 };
 
 function wlPercent(team){
