@@ -9,6 +9,14 @@
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.validate.js"></script>
 	
+  <script>
+$(document).ready(function() {
+    $('#standings').tooltip({ 
+                    selector: 'span.link',
+                    html:true,
+                });
+            });
+    </script>
 
 
 </head>
@@ -35,7 +43,7 @@
 
                 <!-- <a href= "#myModal" data-target= "#create_team" data-toggle="modal">Add Your Team</a> -->
 
-                <a href= "#myModal" data-target= "#create_team"  onclick="howManyTeams()" data-toggle="modal">Add Your Team</a>
+                <a href= "#" onclick="howManyTeams()">Add Your Team</a>
 
               </li>
               <li class="">
@@ -96,8 +104,13 @@
                </div>
 
 
-
-
+<!-- Create the Modal For a Full League -->
+  <div id="full_league" class="modal hide fade">
+    <div class="modal-header" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>We are sorry to inform you, our league is FULL. <p>A total of 6 teams are allowed.<p></h3>
+    </div>
+  </div>
 
 
 
@@ -267,7 +280,7 @@ function addTeamToTable(team) {
   $(
     "<tr>" +
     // "<td>" + team.id + "</td>" +
-    "<th><span class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
+    "<th><span class='show link' data-content='testUnderTitle' data-original-title='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode:" + team.zipcode + "'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
     // "<p class='more'><br>" +
     // "Manager: " + team.firstName + " " + team.lastName + "<br>" +
     // "Phone: " + team.phone + "<br>" +
@@ -306,12 +319,22 @@ function howManyTeams(){
     dataType: "json",
     success: function (data) {
       if (data.length>=6){
-       return data.length 
+       //alert("Sorry the league is FULL. \n(6 teams total allowed)")
+       $('#full_league').modal('show')
       }
-        return data.length
-    }
-  })
-};
+      else{
+        $('#create_team').modal('show')
+        clearForm(); 
+      }  //end else
+    } //end of success function
+  })  //end of ajax
+};    //end of function
+
+   function clearForm(){
+     $(".team_inputs").each(function(){
+       $(this).val("");
+    });
+  }
 
 function wlPercent(team){
 	wl = ((+team.totalWins)/((+team.totalWins)+(+team.totalLosses)));
@@ -336,9 +359,6 @@ function deleteTeam(id) {
   //$(this).closest('tr').remove()
   }
 };
-
-
-
 
 	</script>
 	
