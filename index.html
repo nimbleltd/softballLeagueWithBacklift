@@ -123,10 +123,8 @@ $(document).ready(function() {
     <div class="modal-body">
       <form id="modal_form" class="form-horizontal">
         <div class="control-group weekly_scores">
-<!--             <label class="control-label" for="teamname">Week 1 Run total:</label>
-              <div class="controls">
-                  <input type="text" class="team_inputs" id="week01runs" name="week01runs">
-              </div> -->
+          <!-- Append via "weekly_scores" form here -->
+
         </div>
       </form> <!-- Close form -->
     </div> <!-- Close class="modal-body" --> 
@@ -354,6 +352,20 @@ function populateTeamList(team) {
     "</p>").appendTo('#teamList');
 };
 
+// $(document).ready( 
+function populateWeeklyScoresModal(teamCount){
+    console.log(teamCount)
+    $('#enter_weekly_scores').empty
+    for (var i = 1; i <= teamCount; i++) {
+         $("<label class='control-label' for='teamname'>Week " + i + 
+           " Run total:</label> <div class='controls'> <input type='text' class='team_inputs input-small' id='week0" + i +
+           " runs' name='week0" + i + " runs'> <br>").appendTo('#enter_weekly_scores');
+     }
+     $("<button id='createTeam' type='submit' class='btn' data-dismiss='modal' aria-hidden='true' > Submit</button><br><br>").appendTo('#enter_weekly_scores');
+     clearForm(); 
+}
+//onclick='addTeam()'
+   
 function howManyTeams(){
   $.ajax({
     url: 'backliftapp/teamInfo',
@@ -372,6 +384,7 @@ function howManyTeams(){
   })  //end of ajax
 };    //end of function
 
+//$(document).ready(
 function addWeeklyScores(){
     $.ajax({
       url: 'backliftapp/teamInfo',
@@ -380,6 +393,7 @@ function addWeeklyScores(){
       success: function (data) {
         if (data.length<=8 && data.length>=4){
          $('#enter_weekly_scores').modal('show')
+         populateWeeklyScoresModal(data.length)
         }
         else if (data.length<4){
           $('#less_than_4_teams').modal('show')
@@ -403,7 +417,10 @@ function howManyWeeksOfScores(){
    function clearForm(){
      $(".team_inputs").each(function(){
        $(this).val("");
-    });
+      });
+     $(".enter_weekly_scores").each(function(){
+       $(this).val("");
+      });
   }
 
 function wlPercent(team){
