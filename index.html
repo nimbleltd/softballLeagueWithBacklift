@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
 	<!--<link rel="stylesheet" type="text/css" href="css/stylesheet.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/boob.css"> 
 	<script type="text/javascript" src="js/jquery.min.js"></script>	
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.validate.js"></script>
@@ -118,11 +119,11 @@ $(document).ready(function() {
   <div id="enter_weekly_scores" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Enter Your Teams Weekly Scores.</h3>
+        <!-- <h3>Enter Your Teams Weekly Scores.</h3> -->
     </div>
     <div class="modal-body">
       <form id="modal_form" class="form-horizontal">
-        <div class="control-group weekly_scores">
+        <div class="control-group weekly_scores insideWeeklyScores">
           <!-- Append via "weekly_scores" form here -->
 
         </div>
@@ -355,14 +356,19 @@ function populateTeamList(team) {
 // $(document).ready( 
 function populateWeeklyScoresModal(teamCount){
     console.log(teamCount)
-    $('#enter_weekly_scores').empty
+    clearForm(); 
+    //$('#insideWeeklyScores').html('')
+    //$('#insideWeeklyScores').empty()
+    $('#enter_weekly_scores').empty()
+    $("<h3>Enter Your Teams Weekly Scores:</h3>").appendTo('#enter_weekly_scores') 
     for (var i = 1; i <= teamCount; i++) {
-         $("<label class='control-label' for='teamname'>Week " + i + 
+         $("<div class='Bbox'> <label class='control-label' for='teamname'>Week " + i + 
            " Run total:</label> <div class='controls'> <input type='text' class='team_inputs input-small' id='week0" + i +
-           " runs' name='week0" + i + " runs'> <br>").appendTo('#enter_weekly_scores');
+           " runs' name='week0" + i + " runs'> <br> </div>").appendTo('#enter_weekly_scores');
      }
      $("<button id='createTeam' type='submit' class='btn' data-dismiss='modal' aria-hidden='true' > Submit</button><br><br>").appendTo('#enter_weekly_scores');
-     clearForm(); 
+     // $('#enter_weekly_scores').empty()
+     
 }
 //onclick='addTeam()'
    
