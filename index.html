@@ -11,12 +11,13 @@
 	<script src="js/jquery.validate.js"></script>
 	
   <script>
-$(document).ready(function() {
-    $('#standings').tooltip({ 
-                    selector: 'span.link',
-                    html:true,
-                });
-            });
+//$(document).ready(function() { 
+//     $( "#standings" ).popover({
+//       selector: 'span.link',
+//       trigger: "hover focus" ,
+//       html:true, 
+//     });
+// });
     </script>
 
 
@@ -78,15 +79,29 @@ $(document).ready(function() {
 			<br/><br/>
 			<h1>Standings</h1>
 		</div>
-
 <!-- 		Standings Heading    -->
 		<div class="row-fluid">
 			<table id="standings" class="span10 offset1">
-				<tr><th>Team</th><th>Wins</th><th>Loses</th><th>Season W/L%</th></tr>
+				<tr><th>Team</th><th>Wins</th><th>Loses</th><th>W/L %</th></tr>
 			</table>
 		</div> <!-- end table row -->
 
 
+<!-- Weekly Standings -->
+  <div class="clearfix"></div>
+  <div class="container">
+    <div class="row-fluid" style="text-align: center;">
+      <br/><br/>
+      <h2>Weekly Scores</h2>
+    </div>
+<!--    Standings Heading    -->
+    <div class="row-fluid">
+      <table id="weeklyScores" class="span10 offset1">
+        <tr><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>
+      </table>
+    </div> <!-- end table row -->
+
+<!-- END: Weekly Standings -->
 
     <div class="row"> <!--content-->
       <div class="span10">
@@ -240,9 +255,9 @@ $(document).ready(function() {
 //          Schedule Data
 // ==================================================
 
-//var sched4 = [ [ [1, 4], [2, 4] ], [ [1, 3], [2, 4] ], [ [1, 2], [3, 4] ] ]; 
-//var sched6 = [ [ [1, 6], [2, 5], [3, 4] ], [ [1, 5], [4, 6], [2, 3] ], [ [1, 4], [3, 5], [2, 6] ], [ [1, 3], [2, 4], [5, 6] ], [ [1, 2], [3, 6], [4, 5] ], ]; 
-//var sched8 = [ [ [1, 8], [2, 7], [3, 6], [4, 5] ], [ [1, 7], [6, 8], [2, 5], [3, 4] ], [ [1, 6], [5, 7], [4, 8], [2, 3] ], [ [1, 5], [4, 6], [3, 7], [2, 8] ], [ [1, 4], [3, 5], [2, 6], [7, 8] ], [ [1, 3], [2, 4], [5, 8], [6, 7] ], [ [1, 2], [3, 8], [4, 7], [5, 6] ], ];
+var sched4 = [ [ [1, 4], [2, 3] ], [ [1, 3], [2, 4] ], [ [1, 2], [3, 4] ] ]; 
+var sched6 = [ [ [1, 6], [2, 5], [3, 4] ], [ [1, 5], [4, 6], [2, 3] ], [ [1, 4], [3, 5], [2, 6] ], [ [1, 3], [2, 4], [5, 6] ], [ [1, 2], [3, 6], [4, 5] ], ]; 
+var sched8 = [ [ [1, 8], [2, 7], [3, 6], [4, 5] ], [ [1, 7], [6, 8], [2, 5], [3, 4] ], [ [1, 6], [5, 7], [4, 8], [2, 3] ], [ [1, 5], [4, 6], [3, 7], [2, 8] ], [ [1, 4], [3, 5], [2, 6], [7, 8] ], [ [1, 3], [2, 4], [5, 8], [6, 7] ], [ [1, 2], [3, 8], [4, 7], [5, 6] ], ];
 
 
 
@@ -320,7 +335,7 @@ function addTeamToTable(team) {
   $(
     "<tr>" +
     // "<td>" + team.id + "</td>" +
-    "<th><span class='show link' data-content='testUnderTitle' data-original-title='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
+    "<th><span rel='popover' class='show link' data-content='testUnderTitle' data-original-title='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
     // "<p class='more'><br>" +
     // "Manager: " + team.firstName + " " + team.lastName + "<br>" +
     // "Phone: " + team.phone + "<br>" +
@@ -338,7 +353,18 @@ function addTeamToTable(team) {
     "<th>" + wlPercent(team) + "</th>" +
     "</tr>").appendTo('#standings'); //tbody
 
+    $( "#standings" ).popover({
+      selector: 'span.link',
+      trigger: "hover focus" ,
+      html:true,  
+      placement: "bottom"
+    });
+
 }; // end addTeamToTable
+
+
+
+
 
 function populateTeamList(team) {
   $(
@@ -361,16 +387,53 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
     $("<div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button><h3>Enter Weekly Scores for " + teamName + ":</h3></div>").appendTo('#enter_weekly_scores') 
     $("<br>").appendTo('#enter_weekly_scores')
     for (var i = 1; i <= teamCount; i++) {
-         $("<div class='Bbox'> <form class='form-horizontal'><label class='control-label' for='teamname'>Week " + i + 
+         $("<div class='Bbox'> <form class='form-horizontal'><label class='control-label' for='week0" + i +"runs'>Week " + i + 
            " Run total:</label> <div class='controls'> <input type='text' class='team_inputs span1' id='week0" + i +
            " runs' name='week0" + i + " runs'> <br> </form></div></div>").appendTo('#enter_weekly_scores');
      }
-     $("<div class='modal-footer'><button id='createTeam' type='submit' class='btn offset2' data-dismiss='modal' aria-hidden='true' > Submit</button></div>").appendTo('#enter_weekly_scores');
+     $("<div class='modal-footer'><button id='createTeam' type='submit' class='btn offset2' data-dismiss='modal' aria-hidden='true' onclick='updateTeamScore(\"" + teamID + "\")'> Submit</button></div>").appendTo('#enter_weekly_scores');
      // $('#enter_weekly_scores').empty()
      
 }
 //onclick='addTeam()'
    
+// function updateTeamScore(teamID){
+//   $.ajax({
+//     url: 'backliftapp/teamInfo' + teamID,
+//     type: "PUT",
+//     dataType: "json",
+//     success: function (data) { 
+//         data{
+
+//         }
+//     }
+//   })
+// }
+
+function showWeeklyScores(){
+  $(bob = howManyTeamsAreThere(data.length))
+  if (bob == 4){
+    console.log("There are 4 teams " + howManyTeamsAreThere())
+  }
+  else {
+    console.log("in the else" + howManyTeamsAreThere())
+  }
+}
+//showWeeklyScores()
+//howManyTeamsAreThere()
+
+function howManyTeamsAreThere(){
+  $.ajax({
+    url: 'backliftapp/teamInfo',
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      return data.length
+      console.log("There are " + data.length + " teams in the league.")
+    }
+  })    
+}
+
 function howManyTeams(){
   $.ajax({
     url: 'backliftapp/teamInfo',
@@ -390,6 +453,7 @@ function howManyTeams(){
 };    //end of function
 
 //$(document).ready(
+
 function addWeeklyScores(teamID, teamName){
     console.log("teamID: " + teamID + "teamName: " + teamName)
     $.ajax({
