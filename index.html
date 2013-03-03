@@ -258,8 +258,7 @@
 var sched4 = [ [ [1, 4], [2, 3] ], [ [1, 3], [2, 4] ], [ [1, 2], [3, 4] ] ]; 
 var sched6 = [ [ [1, 6], [2, 5], [3, 4] ], [ [1, 5], [4, 6], [2, 3] ], [ [1, 4], [3, 5], [2, 6] ], [ [1, 3], [2, 4], [5, 6] ], [ [1, 2], [3, 6], [4, 5] ], ]; 
 var sched8 = [ [ [1, 8], [2, 7], [3, 6], [4, 5] ], [ [1, 7], [6, 8], [2, 5], [3, 4] ], [ [1, 6], [5, 7], [4, 8], [2, 3] ], [ [1, 5], [4, 6], [3, 7], [2, 8] ], [ [1, 4], [3, 5], [2, 6], [7, 8] ], [ [1, 3], [2, 4], [5, 8], [6, 7] ], [ [1, 2], [3, 8], [4, 7], [5, 6] ], ];
-
-
+// ==================================================
 
 // ==================================================
 //          Load existing team data
@@ -276,9 +275,6 @@ $(document).ready(function () {
         addTeamToTable(data[i]);
         populateTeamList(data[i]);
       }
-      // doPopovers();
-      // track("Json init!");
-      // track("Teams loaded!");
     }
   }); // end ajax
 }); // end ready
@@ -329,8 +325,14 @@ function addTeam() {
     }
   });
 
-}; // end add team
+};
+// ==================================================
+// END: add team
+// ==================================================
 
+// ==================================================
+// Add team to Standings
+// ==================================================
 function addTeamToTable(team) {
   $(
     "<tr>" +
@@ -360,12 +362,16 @@ function addTeamToTable(team) {
       placement: "bottom"
     });
 
-}; // end addTeamToTable
+};
+// ==================================================
+// END: Add team to Standings
+// ==================================================
 
 
 
-
-
+// ==================================================
+// Write each Active Team to screen
+// ==================================================
 function populateTeamList(team) {
   $(
     "<h4 class='show'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + " </h4>" + 
@@ -378,8 +384,14 @@ function populateTeamList(team) {
     "<button aria-hidden='true' class='btn btn-danger' onclick='deleteTeam(\"" + team.id + "\")'>Delete Team "+ team.teamName + "</button>" + "<br>" +
     "</p>").appendTo('#teamList');
 };
+// ==================================================
+// END: Write each Active Team to screen
+// ==================================================
 
-// $(document).ready( 
+// ==================================================
+// Create Modal to enter weekly scores
+// ==================================================
+// This function is called by addWeeklyScores()
 function populateWeeklyScoresModal(teamCount, teamID, teamName){
     console.log("TeamCount: " + teamCount)
     clearForm(); 
@@ -396,7 +408,12 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
      
 }
 //onclick='addTeam()'
-   
+// ==================================================
+// END: Create Modal to enter weekly scores
+// ==================================================
+
+
+
 // function updateTeamScore(teamID){
 //   $.ajax({
 //     url: 'backliftapp/teamInfo' + teamID,
@@ -434,18 +451,23 @@ function howManyTeamsAreThere(){
   })    
 }
 
+// ==================================================
+// Create a new Team? if the team count is less >=8 show new team modal, if not show tooFewTeams modal
+// ==================================================
 function howManyTeams(){
   $.ajax({
     url: 'backliftapp/teamInfo',
     type: "GET",
     dataType: "json",
     success: function (data) {
+      howManyTeamsAreThere();
       if (data.length>=8){
        //alert("Sorry the league is FULL. \n(6 teams total allowed)")
        $('#full_league').modal('show')
       }
       else{
         $('#create_team').modal('show')
+        howManyTeamsAreThere()
         clearForm(); 
       }  //end else
     } //end of success function
@@ -454,6 +476,9 @@ function howManyTeams(){
 
 //$(document).ready(
 
+// ==================================================
+// Calls modal for either too few teams or adding weekly scores
+// ==================================================
 function addWeeklyScores(teamID, teamName){
     console.log("teamID: " + teamID + "teamName: " + teamName)
     $.ajax({
@@ -471,19 +496,26 @@ function addWeeklyScores(teamID, teamName){
       }
     }) // end ajax
 }; // end function
-
-function howManyWeeksOfScores(){
-    $.ajax({
-      url: 'backliftapp/teamInfo',
-      type: "GET",
-      dataType: "json",
-      success: function (data) {
-        console.log("data.length= " + data.length)
-      } //end of success
-    })// end of ajax
-} // end of howManyWeeksOfScores
+// ==================================================
+// END: Calls modal for either too few teams or adding weekly scores
+// ==================================================
 
 
+// function howManyWeeksOfScores(){
+//     $.ajax({
+//       url: 'backliftapp/teamInfo',
+//       type: "GET",
+//       dataType: "json",
+//       success: function (data) {
+//         console.log("data.length= " + data.length)
+//       } //end of success
+//     })// end of ajax
+// } // end of howManyWeeksOfScores
+
+
+// ==================================================
+// Clears both modals when called
+// ==================================================
    function clearForm(){
      $(".team_inputs").each(function(){
        $(this).val("");
@@ -492,7 +524,13 @@ function howManyWeeksOfScores(){
        $(this).val("");
       });
   }
+// ==================================================
+// END: Clears both modals when called
+// ==================================================
 
+// ==================================================
+// Calculate WL%
+// ==================================================
 function wlPercent(team){
 	wl = ((+team.totalWins)/((+team.totalWins)+(+team.totalLosses)));
 	if(isNaN(wl)){
@@ -503,6 +541,13 @@ function wlPercent(team){
 		return formatWL
 	}
 };
+// ==================================================
+// END:Calculate WL%
+// ==================================================
+
+// ==================================================
+// Delete selected team
+// ==================================================
 function deleteTeam(id) {
   console.log(id)
   var conf = confirm("Are you sure you want to delete this team?");
@@ -516,13 +561,11 @@ function deleteTeam(id) {
   //$(this).closest('tr').remove()
   }
 };
+// ==================================================
+// END: Delete selected team
+// ==================================================
 
-	</script>
+</script>
 	
-
-
-
-
-
 </body>
 </html>
