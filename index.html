@@ -97,7 +97,7 @@
 <!--    Standings Heading    -->
     <div class="row-fluid">
       <table id="weeklyScores" class="span10 offset1">
-        <tr><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>
+        <!-- <tr><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr> -->
       </table>
     </div> <!-- end table row -->
 
@@ -274,7 +274,9 @@ $(document).ready(function () {
       for (var i = 0; i < data.length; i++) {
         addTeamToTable(data[i]);
         populateTeamList(data[i]);
+        // populateWeeklyScores(data[i]);
       }
+      populateWeeklyScores(data);
     }
   }); // end ajax
 }); // end ready
@@ -287,6 +289,7 @@ $(document).ready(function () {
 // Add team info from form to backlift JSON data file
 // ==================================================
 var leagueAll = [];
+//var results_array = [];
 // add team to league
 function addTeam() {
   var teamInfo = {
@@ -319,6 +322,7 @@ function addTeam() {
       leagueAll.push(data);
       addTeamToTable(data);
       populateTeamList(data);
+      populateWeeklyScores(data);
       // doPopovers();
       //put teamInfo in the table of teams
       // track(data.name + " saved to database!");
@@ -338,20 +342,8 @@ function addTeamToTable(team) {
     "<tr>" +
     // "<td>" + team.id + "</td>" +
     "<th><span rel='popover' class='show link' data-content='testUnderTitle' data-original-title='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
-    // "<p class='more'><br>" +
-    // "Manager: " + team.firstName + " " + team.lastName + "<br>" +
-    // "Phone: " + team.phone + "<br>" +
-    // "E-mail: " + team.email + "<br></p>" +
-    // "</td>" +
-    // "<td>" + team.week01runs + "</td>" +
-    // "<td>" + team.week02runs + "</td>" +
-    // "<td>" + team.week03runs + "</td>" +
-    // "<td>" + team.week04runs + "</td>" +
-    // "<td>" + team.week05runs + "</td>" +
-    // "<td>" + team.week06runs + "</td>" +
     "<th>" + team.totalWins + "</th>" +
     "<th>" + team.totalLosses + "</th>" +
-    //"<td>" + "workingOnCalculating" + "</td>" +
     "<th>" + wlPercent(team) + "</th>" +
     "</tr>").appendTo('#standings'); //tbody
 
@@ -391,7 +383,7 @@ function populateTeamList(team) {
 // ==================================================
 // Create Modal to enter weekly scores
 // ==================================================
-// This function is called by addWeeklyScores()
+// This function is called by populateWeeklyScores()
 function populateWeeklyScoresModal(teamCount, teamID, teamName){
     console.log("TeamCount: " + teamCount)
     clearForm(); 
@@ -427,29 +419,141 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
 //   })
 // }
 
-function showWeeklyScores(){
-  $(bob = howManyTeamsAreThere(data.length))
-  if (bob == 4){
-    console.log("There are 4 teams " + howManyTeamsAreThere())
-  }
-  else {
-    console.log("in the else" + howManyTeamsAreThere())
-  }
-}
-//showWeeklyScores()
-//howManyTeamsAreThere()
-
-function howManyTeamsAreThere(){
+function populateWeeklyScores(team){
+  $('#weeklyScores').empty()
   $.ajax({
     url: 'backliftapp/teamInfo',
     type: "GET",
     dataType: "json",
     success: function (data) {
-      return data.length
-      console.log("There are " + data.length + " teams in the league.")
-    }
-  })    
-}
+      console.log("data.length: " + data.length)
+      if (data.length===4){
+        SCHED = sched4;
+        console.log("inside 4");
+        console.log(SCHED);
+      }
+      else if ((data.length=5) || (data.length = 6)){
+        SCHED = sched6;
+        console.log("inside 5 and 6");
+        console.log(SCHED);
+      }
+      else if ((data.length=7) || (data.length = 8)){
+        SCHED = sched8;
+        console.log("inside 7 & 8");
+        console.log(SCHED);
+      }
+      if (data.length % 2 === 0) {
+        billy = data.length % 2;
+        console.log("billy = " + billy)
+        console.log("even write SCHED")
+        console.log("in EVENSCHEDLOOP data = " + data)
+        writeSCHEDeven(data, SCHED)
+
+      }
+      else {
+        writeSCHEDodd(data, SCHED)
+        console.log("odd write SCHED")
+      }
+    } // end success
+  }) 
+  //"").appendTo('weeklyScores');
+} //end function
+
+function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues (4,6,8 teams)
+      $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
+      console.log("SCHED.length = " +SCHED.length)
+      //if (data.length >= 4) {
+        //prepTable();
+        //var clicker = 0;
+
+        for (var i = 0; i < SCHED.length; i++) {   //weeks loop
+          console.log("i+1 = " + (i+1));
+          console.log("data = " + data);
+          console.log("data[0].somethings = " + data[0].teamName)
+          console.log("data[0].somethings = " + data[0].teamName)
+          console.log("data[(SCHED[0][0][0]-1)].teamName should be Sienfield = " + data[(SCHED[0][0][0]-1)].teamName)
+          console.log("data[(SCHED[0][0][1]-1)].teamName should be four = " + data[(SCHED[0][0][1]-1)].teamName)
+
+          console.log("data[(SCHED[0][0][1][0])].teamName  should be two = " + data[(SCHED[0][1][0]-1)].teamName)
+          console.log("data[(SCHED[0][0][1][1]).teamName should be three = " + data[(SCHED[0][1][1]-1)].teamName)
+
+          console.log("game 1 week 2 ONE = " + data[(SCHED[1][0][0]-1)].teamName)
+          console.log("game 1 week 2 THREE = " + data[(SCHED[1][0][1]-1)].teamName)
+//asdfhpohfpaoiehrfpoiashdf
+          for (var k =0; k < (SCHED.length-1); k++) { //loop within a loop
+            var l = 0;
+            console.log("i = " + i)
+            console.log("k = " + k)
+            $("<tr><th>"+(i+1)+"</th><th>" + data[((SCHED[i][k][l])-1)].teamName  +  "</th><th>" + data[((SCHED[i][k][l])-1)].week01runs + "</th><th>"+data[((SCHED[i][k][l+1])-1)].week01runs+"</th><th>"+data[((SCHED[i][k][l+1])-1)].teamName+"</th></tr>").appendTo('#weeklyScores');
+
+
+          //$('<tr ><th colspan="2"><a>Week ' + (i + 1) + ' Matchups</a></th></tr>').appendTo('#weeklyScores' + i);
+          //for (var j = 0; j < SCHED[i].length; j++) {   //games loop
+          //   var n = 1;
+          //   prepSched (i, j, n, data);
+          };        
+        };
+      };
+    //};
+//style="background-color: #8dbdd8;"
+
+// function getTeamNameFromSCHEDNum(){
+
+// }
+//gkjhgjhg
+
+    function writeSCHEDodd(data, sched) { //writes scheduletable for odd-# leagues (5,7 teams)
+
+      if (data.length >= 4) {
+        prepTable();    
+
+        for (var i = 0; i < SCHED.length; i++) {   //weeks loop
+          $('<tr style="background-color: #8dbdd8;"><th colspan="2"><a>Week ' + (i + 1) + ' Matchups<br><span style="font-weight:200; font-size: 0.9em;">(Bye week: ' + data[SCHED[i][0][1] - 2].teamName + ')</span></a></th></tr>').appendTo('#weeklyScores' + i);
+          // for (var j = 1; j < SCHED[i].length; j++) {   //games loop
+          //   var n = 2;
+          //   prepSched (i, j, n, data);
+          // };
+        };  
+      };  
+    };
+
+function prepTable() { //preps empty table for schedWrite function
+      for (var g = 0; g < SCHED.length; g++) {
+        $('<div class="row-fluid"><table class="span12"><thead id="schedule_head' + g + '" class="slide_head"></thead><tbody class="slide_body" id="schedule_body' + g + '" style="display: none;"></tbody></table></div>').appendTo('#weeklyScores');
+      }; 
+    };
+
+var clicker = 0;
+
+// function prepSched(i, j, n, data) { //appends schedule info into prepped table
+//       var score_grab1, score_grab2;
+//       if (clicker >= results_array[0].length) {
+//         score_grab1 = 'TBA';
+//         score_grab2 = 'TBA';
+//       }
+
+//       else {
+//         score_grab1 = results_array[0][clicker].score1;
+//         score_grab2 = results_array[0][clicker].score2;
+//       }
+
+//       $('<tr style="background-color: #e6EEEE;"><td colspan="2">' + data[SCHED[i][j][0] - n].teamName + " vs. " + data[SCHED[i][j][1] - n].teamName + "</td></tr>").appendTo('#weeklyScores' + i);
+//       $('<tr><td>' + data[SCHED[i][j][0] - n].teamName + '</td><td>' + score_grab1 + '</td></tr>').appendTo('#weeklyScores' + i);
+//       $('<tr><td>' + data[SCHED[i][j][1] - n].teamName + '</td><td>' + score_grab2 + '</td></tr>').appendTo('#weeklyScores' + i);
+//       clicker++;
+//     }; //end prepSched func
+
+// function showWeeklyScores(){
+//   $(bob = howManyTeamsAreThere())
+//   console.log("bob= " + bob + " " + howManyTeamsAreThere())
+//   if (bob == 4){
+//     console.log("There are 4 teams " + bob)
+//   }
+//   else {
+//     console.log("in the else " + bob)
+//   }
+// }
+
 
 // ==================================================
 // Create a new Team? if the team count is less >=8 show new team modal, if not show tooFewTeams modal
@@ -460,14 +564,14 @@ function howManyTeams(){
     type: "GET",
     dataType: "json",
     success: function (data) {
-      howManyTeamsAreThere();
+      //howManyTeamsAreThere();
       if (data.length>=8){
        //alert("Sorry the league is FULL. \n(6 teams total allowed)")
        $('#full_league').modal('show')
       }
       else{
         $('#create_team').modal('show')
-        howManyTeamsAreThere()
+        //howManyTeamsAreThere()
         clearForm(); 
       }  //end else
     } //end of success function
