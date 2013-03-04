@@ -30,9 +30,9 @@
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<!--             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> -->
           </button>
           <a class="brand" href="./index.html"><!-- Bootstrap --></a>
           <div class="nav-collapse collapse">
@@ -57,13 +57,13 @@
               <li class="active">
                 <a href="./components.html">Team Page</a>
               </li>
-              <li class="dropdown-submenu">
+<!--               <li class="dropdown-submenu">
                 <a href="./customize.html">Dropdown</a>
                 	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                 		<li><a tabindex="-1" href="#">Action</a></li>
     					<li><a tabindex="-1" href="#">Another action</a></li>
     					<li><a tabindex="-1" href="#">Something else here</a></li>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>
@@ -289,7 +289,6 @@ $(document).ready(function () {
 // Add team info from form to backlift JSON data file
 // ==================================================
 var leagueAll = [];
-//var results_array = [];
 // add team to league
 function addTeam() {
   var teamInfo = {
@@ -395,7 +394,7 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
            " Run total:</label> <div class='controls'> <input type='text' class='team_inputs span1' id='week0" + i +
            " runs' name='week0" + i + " runs'> <br> </form></div></div>").appendTo('#enter_weekly_scores');
      }
-     $("<div class='modal-footer'><button id='createTeam' type='submit' class='btn offset2' data-dismiss='modal' aria-hidden='true' onclick='updateTeamScore(\"" + teamID + "\")'> Submit</button></div>").appendTo('#enter_weekly_scores');
+     $("<div class='modal-footer'><button id='updateScores' type='submit' class='btn offset2' data-dismiss='modal' aria-hidden='true' onclick='updateTeamScore(\"" + teamID + "\", \"" + teamCount + "\")'> Submit</button></div>").appendTo('#enter_weekly_scores');
      // $('#enter_weekly_scores').empty()
      
 }
@@ -404,20 +403,22 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
 // END: Create Modal to enter weekly scores
 // ==================================================
 
+function updateTeamScore(teamID, teamCount){
+    // $.ajax({
+    //   url: 'backliftapp/teamInfo' + teamID,
+    //   type: "PUT",
+    //   dataType: "json",
+    //   data: teamInfo,
+    //   success: function (data) {
+    //     $("#updateScores").click(function(){
+    //       for (var i = 1; i <= teamCount; i++) { 
+    //         week0+i+runs: week0+i+runs
+    //       }
+    //     }
+    //   }    
+    // })                                    
+}
 
-
-// function updateTeamScore(teamID){
-//   $.ajax({
-//     url: 'backliftapp/teamInfo' + teamID,
-//     type: "PUT",
-//     dataType: "json",
-//     success: function (data) { 
-//         data{
-
-//         }
-//     }
-//   })
-// }
 
 function populateWeeklyScores(team){
   $('#weeklyScores').empty()
@@ -463,23 +464,6 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
       $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
 
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
-          // console.log("i+1 = " + (i+1));
-          // console.log("data = " + data);
-          // console.log("data[0].somethings = " + data[0].teamName)
-          // console.log("data[0].somethings = " + data[0].teamName)
-          // console.log("data[(SCHED[0][0][0]-1)].teamName should be Sienfield = " + data[(SCHED[0][0][0]-1)].teamName)
-          // console.log("data[(SCHED[0][0][1]-1)].teamName should be four = " + data[(SCHED[0][0][1]-1)].teamName)
-
-          // console.log("data[(SCHED[0][0][1][0])].teamName  should be two = " + data[(SCHED[0][1][0]-1)].teamName)
-          // console.log("data[(SCHED[0][0][1][1]).teamName should be three = " + data[(SCHED[0][1][1]-1)].teamName)
-
-          // console.log("game 1 week 2 ONE = " + data[(SCHED[1][0][0]-1)].teamName)
-          // console.log("game 1 week 2 THREE = " + data[(SCHED[1][0][1]-1)].teamName)
-
-          // console.log("week 2 ONE = " + data[(SCHED[1][0][0]-1)].teamName)
-          // console.log("week 2 THREE = " + data[(SCHED[1][0][1]-1)].teamName)
-
-          // if 4 teams
           if (data.length === 4){
             var numOfGamesEachWeek = 1;
           }
@@ -491,9 +475,6 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
           }
             for (var k =0; k < (SCHED.length-numOfGamesEachWeek); k++) { //loop within a loop
               var l = 0; //alternates between home and away teamName
-              // console.log("i = " + i)
-              // console.log("k = " + k)
-              // console.log("the thing that is breaking =" + data[((SCHED[i][k][l])-1)].teamName)
               $("<tr><th>"+(i+1)+"</th><th>" +
                data[((SCHED[i][k][l])-1)].teamName  +
                 "</th><th>" + data[((SCHED[i][k][l])-1)].week01runs + "</th><th>"+data[((SCHED[i][k][l+1])-1)].week01runs+"</th><th>"+
@@ -505,19 +486,29 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
 
 
     function writeSCHEDodd(data, sched) { //writes scheduletable for odd-# leagues (5,7 teams)
-
-      if (data.length >= 4) {
-        prepTable();    
-
+      $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
+        console.log("SCHED.length = " + SCHED.length)
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
-          $('<tr style="background-color: #8dbdd8;"><th colspan="2"><a>Week ' + (i + 1) + ' Matchups<br><span style="font-weight:200; font-size: 0.9em;">(Bye week: ' + data[SCHED[i][0][1] - 2].teamName + ')</span></a></th></tr>').appendTo('#weeklyScores' + i);
-          // for (var j = 1; j < SCHED[i].length; j++) {   //games loop
-          //   var n = 2;
-          //   prepSched (i, j, n, data);
-          // };
-        };  
-      };  
-    };
+          if (data.length === 5){
+            var numOfGamesEachWeek = 3;
+          }
+          else if (data.length === 7){
+            var numOfGamesEachWeek = 4;
+          }
+            for (var k =1; k < numOfGamesEachWeek; k++) { //loop within a loop
+              var l = 0; //alternates between 1st and 2nd team listed for each game
+              console.log("i = " + i)
+              console.log("k = " + k)
+              console.log("FAILS ((SCHED[i][k][l+1])-1) = " + ((SCHED[i][k][l+1])-1))
+              //console.log("num, teamName = " + ((SCHED[i][k][l+1])-1) + " "+ data[((SCHED[i][k][l+1])-1)].teamName)
+              $("<tr><th>"+(i+1)+"</th><th>" +
+               data[((SCHED[i][k][l])-1)].teamName  +
+                "</th><th>" + data[((SCHED[i][k][l])-1)].week01runs + "</th><th>"+ data[((SCHED[i][k][l+1])-2)].week01runs +"</th><th>"+
+                data[((SCHED[i][k][l+1])-2)].teamName+
+                "</th></tr>").appendTo('#weeklyScores');
+            };        
+        };
+      };
 
 // ==================================================
 // Create a new Team? if the team count is less >=8 show new team modal, if not show tooFewTeams modal
