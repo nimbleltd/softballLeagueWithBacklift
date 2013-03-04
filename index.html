@@ -560,16 +560,16 @@ function addWeeklyScores(teamID, teamName){
 // ==================================================
 
 
-// function howManyWeeksOfScores(){
-//     $.ajax({
-//       url: 'backliftapp/teamInfo',
-//       type: "GET",
-//       dataType: "json",
-//       success: function (data) {
-//         console.log("data.length= " + data.length)
-//       } //end of success
-//     })// end of ajax
-// } // end of howManyWeeksOfScores
+function howManyWeeksOfScores(){
+    $.ajax({
+      url: 'backliftapp/teamInfo',
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        console.log("data.length= " + data.length)
+      } //end of success
+    })// end of ajax
+} // end of howManyWeeksOfScores
 
 
 // ==================================================
