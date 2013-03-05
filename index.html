@@ -488,14 +488,12 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
           }
             for (var k =0; k < (SCHED.length-numOfGamesEachWeek); k++) { //loop within a loop
               var l = 0; //alternates between home and away teamName
-              $("<tr><th>"+(i+1)+"</th><th>" +
+              $("<tr><td>"+(i+1)+"</td><td>" +
                data[((SCHED[i][k][l])-1)].teamName  +
-                "</th><th>" + eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + "</th><th>"+ eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")+"</th><th>"+
+                "</td><td>" + eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + "</td><td>"+ eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")+"</td><td>"+
                 data[((SCHED[i][k][l+1])-1)].teamName+
-                "</th></tr>").appendTo('#weeklyScores');
+                "</td></tr>").appendTo('#weeklyScores');
             };
-
-
         };
       };
 
