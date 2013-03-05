@@ -81,9 +81,11 @@
 		</div>
 <!-- 		Standings Heading    -->
 		<div class="row-fluid">
-			<table id="standings" class="span10 offset1">
-				<tr><th>Team</th><th>Wins</th><th>Loses</th><th>W/L %</th></tr>
+			<div class="span10 offset1">
+      <table id="standings" class="table table-striped">
+				<tr><th><h4>Team</h4></th><th><h4>Wins</h4></th><th><h4>Loses</h4></th><th><h4>W/L %</h4></th></tr>
 			</table>
+      </div>
 		</div> <!-- end table row -->
 
 
@@ -96,7 +98,8 @@
     </div>
 <!--    Standings Heading    -->
     <div class="row-fluid">
-      <table id="weeklyScores" class="span10 offset1">
+      <div class="span10 offset1">
+      <table id="weeklyScores" class="table table-striped">
         <!-- <tr><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr> -->
       </table>
     </div> <!-- end table row -->
@@ -338,19 +341,20 @@ function addTeam() {
 // ==================================================
 function addTeamToTable(team) {
   $(
-    "<tr>" +
+     "<tr>" +
     // "<td>" + team.id + "</td>" +
-    "<th><span rel='popover' class='show link' data-content='testUnderTitle' data-original-title='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + " <em>sponsored by</em> " + team.sponsor + "</span></th>" +
-    "<th>" + team.totalWins + "</th>" +
-    "<th>" + team.totalLosses + "</th>" +
-    "<th>" + wlPercent(team) + "</th>" +
+    // Deleted the non-needed information 
+    "<td><span rel='popover' class='show link' data-original-title='Team Info' data-content='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + "</span></td>" +
+    "<td>" + team.totalWins + "</td>" +
+    "<td>" + team.totalLosses + "</td>" +
+    "<td>" + wlPercent(team) + "</td>" +
     "</tr>").appendTo('#standings'); //tbody
 
     $( "#standings" ).popover({
       selector: 'span.link',
       trigger: "hover focus" ,
       html:true,  
-      placement: "bottom"
+      placement: "right"
     });
 
 };
@@ -388,12 +392,20 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
     clearForm(); 
     $('#enter_weekly_scores').empty()
     $("<div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button><h3>Enter Weekly Scores for " + teamName + ":</h3></div>").appendTo('#enter_weekly_scores') 
-    $("<br>").appendTo('#enter_weekly_scores')
+    $("<br>").appendTo('#enter_weekly_scores');
+    
+    var html = '<form id="my-form-id" class="form-horizontal control-group">';
+
     for (var i = 1; i <= teamCount; i++) {
-         $("<div class='Bbox'> <form class='form-horizontal'><label class='control-label' for='week0" + i +"runs'>Week " + i + 
+         html += "<div class='Bbox'><label class='control-label' for='week0" + i +"runs'>Week " + i + 
            " Run total:</label> <div class='controls'> <input type='text' class='team_inputs span1' id='week0" + i +
-           " runs' name='week0" + i + " runs'> <br> </form></div></div>").appendTo('#enter_weekly_scores');
+           "runs' name='week0" + i + "runs'> <br> </div></div></div>";
      }
+
+     html += '</form>';
+
+     $(html).appendTo('#enter_weekly_scores');
+
      $("<div class='modal-footer'><button id='updateScores' type='submit' class='btn offset2' data-dismiss='modal' aria-hidden='true' onclick='updateTeamScore(\"" + teamID + "\", \"" + teamCount + "\")'> Submit</button></div>").appendTo('#enter_weekly_scores');
      // $('#enter_weekly_scores').empty()
      
@@ -404,20 +416,21 @@ function populateWeeklyScoresModal(teamCount, teamID, teamName){
 // ==================================================
 
 function updateTeamScore(teamID, teamCount){
-    // $.ajax({
-    //   url: 'backliftapp/teamInfo' + teamID,
-    //   type: "PUT",
-    //   dataType: "json",
-    //   data: teamInfo,
-    //   success: function (data) {
-    //     $("#updateScores").click(function(){
-    //       for (var i = 1; i <= teamCount; i++) { 
-    //         week0+i+runs: week0+i+runs
-    //       }
-    //     }
-    //   }    
-    // })                                    
-}
+  var form = $('#my-form-id');
+  var data = form.serialize();
+  console.log('Form: ', form);
+  console.log('Data: ', data);
+  $.ajax({
+    url: 'backliftapp/teamInfo/' + teamID,
+    type: "PUT",
+    dataType: "json",
+    data: data,
+    success: function(data){
+      console.log('Success: ', data);
+    }
+  });
+}  
+  
 
 
 function populateWeeklyScores(team){
@@ -461,7 +474,7 @@ function populateWeeklyScores(team){
 } //end function
 
 function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues (4,6,8 teams)
-      $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
+      $("<tr><th><h4>Week</h4></th><th><h4>Home Team</h4></th><th><h4>Runs</h4></th><th><h4>Runs</h4></th><th><h4>Away Team</h4></th></tr>").appendTo('#weeklyScores');
 
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
           if (data.length === 4){
@@ -477,10 +490,12 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
               var l = 0; //alternates between home and away teamName
               $("<tr><th>"+(i+1)+"</th><th>" +
                data[((SCHED[i][k][l])-1)].teamName  +
-                "</th><th>" + data[((SCHED[i][k][l])-1)].week01runs + "</th><th>"+data[((SCHED[i][k][l+1])-1)].week01runs+"</th><th>"+
+                "</th><th>" + eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + "</th><th>"+ eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")+"</th><th>"+
                 data[((SCHED[i][k][l+1])-1)].teamName+
                 "</th></tr>").appendTo('#weeklyScores');
-            };        
+            };
+
+
         };
       };
 
