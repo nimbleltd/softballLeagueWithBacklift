@@ -37,9 +37,9 @@
           <a class="brand" href="./index.html"><!-- Bootstrap --></a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="">
+<!--               <li class="">
                 <a href="./index.html">Home</a>
-              </li>
+              </li> -->
               <li class="">
                 <!-- <a href="./getting-started.html">Add Your Team</a> -->
 
@@ -49,14 +49,14 @@
 
               </li>
               <li class="">
-                <a href="./scaffolding.html">Standings</a>
+                <a href="#standings">Standings</a>
               </li>
               <li class="">
-                <a href="./base-css.html">Weekly Results</a>
+                <a href="#weeklyScores">Weekly Scores</a>
               </li>
-              <li class="active">
+<!--               <li class="active">
                 <a href="./components.html">Team Page</a>
-              </li>
+              </li> -->
 <!--               <li class="dropdown-submenu">
                 <a href="./customize.html">Dropdown</a>
                 	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
@@ -310,8 +310,8 @@ function addTeam() {
     week06runs: 0,
     week07runs: 0,
     week08runs: 0,
-    totalWins: (((Math.floor)(Math.random()*11))+1),   //random number generated at this time
-    totalLosses: (((Math.floor)(Math.random()*6))+1)
+    totalWins: 0, //(((Math.floor)(Math.random()*11))+1),   //random number generated at this time
+    totalLosses: 0, //(((Math.floor)(Math.random()*6))+1)
   };
 
   $.ajax({
@@ -336,31 +336,6 @@ function addTeam() {
 // END: add team
 // ==================================================
 
-// ==================================================
-// Add team to Standings
-// ==================================================
-function addTeamToTable(team) {
-  $(
-     "<tr>" +
-    // "<td>" + team.id + "</td>" +
-    // Deleted the non-needed information 
-    "<td><span rel='popover' class='show link' data-original-title='Team Info' data-content='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + "</span></td>" +
-    "<td>" + team.totalWins + "</td>" +
-    "<td>" + team.totalLosses + "</td>" +
-    "<td>" + wlPercent(team) + "</td>" +
-    "</tr>").appendTo('#standings'); //tbody
-
-    $( "#standings" ).popover({
-      selector: 'span.link',
-      trigger: "hover focus" ,
-      html:true,  
-      placement: "right"
-    });
-
-};
-// ==================================================
-// END: Add team to Standings
-// ==================================================
 
 
 
@@ -432,8 +407,6 @@ function updateTeamScore(teamID, teamCount){
 }  
   
 
-var even = [];
-
 function populateWeeklyScores(team){
   $('#weeklyScores').empty()
   $.ajax({
@@ -491,7 +464,7 @@ function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# league
         totalLosses: 0,
       },
       success: function(data){
-        //console.log('Success: ', data);
+        console.log('Success: ', data);
       }
     })
   }
@@ -670,15 +643,6 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
 } // END: function writeWinsAndLosses 
 
 
-
-
-
-
-
-
-
-
-
     function writeSCHEDodd(data, SCHED) { //writes scheduletable for odd-# leagues (5,7 teams)
       $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
         console.log("SCHED.length = " + SCHED.length)
@@ -691,19 +655,45 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
           }
             for (var k =1; k < numOfGamesEachWeek; k++) { //loop within a loop
               var l = 0; //alternates between 1st and 2nd team listed for each game
+              //writeWinsAndLosses(data, SCHED,k,l,i)
               console.log("i = " + i)
               console.log("k = " + k)
               console.log("FAILS ((SCHED[i][k][l+1])-1) = " + ((SCHED[i][k][l+1])-1))
               //console.log("num, teamName = " + ((SCHED[i][k][l+1])-1) + " "+ data[((SCHED[i][k][l+1])-1)].teamName)
-              $("<tr><th>"+(i+1)+"</th><th>" +
+              $("<tr><td>"+(i+1)+"</td><td>" +
                data[((SCHED[i][k][l])-1)].teamName  +
-                "</th><th>" + data[((SCHED[i][k][l])-1)].week01runs + "</th><th>"+ data[((SCHED[i][k][l+1])-2)].week01runs +"</th><th>"+
+                "</td><td>" + data[((SCHED[i][k][l])-1)].week01runs + "</td><td>"+ data[((SCHED[i][k][l+1])-2)].week01runs +"</td><td>"+
                 data[((SCHED[i][k][l+1])-2)].teamName+
-                "</th></tr>").appendTo('#weeklyScores');
+                "</td></tr>").appendTo('#weeklyScores');
             };        
         };
       };
 
+// ==================================================
+// Add team to Standings
+// ==================================================
+function addTeamToTable(team) {
+  $(
+     "<tr>" +
+    // "<td>" + team.id + "</td>" +
+    // Deleted the non-needed information 
+    "<td><span rel='popover' class='show link' data-original-title='Team Info' data-content='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + "</span></td>" +
+    "<td>" + team.totalWins + "</td>" +
+    "<td>" + team.totalLosses + "</td>" +
+    "<td>" + wlPercent(team) + "</td>" +
+    "</tr>").appendTo('#standings'); //tbody
+
+    $( "#standings" ).popover({
+      selector: 'span.link',
+      trigger: "hover focus" ,
+      html:true,  
+      placement: "right"
+    });
+
+};
+// ==================================================
+// END: Add team to Standings
+// ==================================================
 
 
 // ==================================================
