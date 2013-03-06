@@ -432,6 +432,7 @@ function updateTeamScore(teamID, teamCount){
 }  
   
 
+var even = [];
 
 function populateWeeklyScores(team){
   $('#weeklyScores').empty()
@@ -440,6 +441,7 @@ function populateWeeklyScores(team){
     type: "GET",
     dataType: "json",
     success: function (data) {
+      even = data;
       console.log("data.length: " + data.length)
       if (data.length===4){
         SCHED = sched4;
@@ -462,7 +464,7 @@ function populateWeeklyScores(team){
         // console.log("billy = " + billy)
         // console.log("even write SCHED")
         // console.log("in EVENSCHEDLOOP data = " + data)
-        writeSCHEDeven(data, SCHED)
+        writeSCHEDeven(even, SCHED)
       }
       else {
         writeSCHEDodd(data, SCHED)
@@ -473,9 +475,30 @@ function populateWeeklyScores(team){
   //"").appendTo('weeklyScores');
 } //end function
 
-function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues (4,6,8 teams)
-      $("<tr><th><h4>Week</h4></th><th><h4>Home Team</h4></th><th><h4>Runs</h4></th><th><h4>Runs</h4></th><th><h4>Away Team</h4></th></tr>").appendTo('#weeklyScores');
+function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# leagues (4,6,8 teams)
+  //console.log("allTeams = ", data); 
+  
+  //This resets all Wins and Losses to ZERO
+  for (var clearScores = 0; clearScores < data.length; clearScores++){
+    teamID = data[clearScores].id;
+    //console.log("teamID = ", teamID);
+    $.ajax({
+      url: 'backliftapp/teamInfo/' + teamID,
+      type: "PUT",
+      dataType: "json",
+      data: {
+        totalWins: 0,
+        totalLosses: 0,
+      },
+      success: function(data){
+        //console.log('Success: ', data);
+      }
+    })
+  }
 
+
+  $("<tr><th><h4>Week</h4></th><th><h4>Home Team</h4></th><th><h4>Runs</h4></th><th><h4>Runs</h4></th><th><h4>Away Team</h4></th></tr>").appendTo('#weeklyScores');
+        //teamID = data[clearScores].id;
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
           if (data.length === 4){
             var numOfGamesEachWeek = 1;
@@ -487,18 +510,176 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
             var numOfGamesEachWeek = 3;
           }
             for (var k =0; k < (SCHED.length-numOfGamesEachWeek); k++) { //loop within a loop
-              var l = 0; //alternates between home and away teamName
+              var l = 0; //alternates between home and away team.teamName
+              writeWinsAndLosses(data, SCHED,k,l,i)
               $("<tr><td>"+(i+1)+"</td><td>" +
                data[((SCHED[i][k][l])-1)].teamName  +
                 "</td><td>" + eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + "</td><td>"+ eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")+"</td><td>"+
                 data[((SCHED[i][k][l+1])-1)].teamName+
                 "</td></tr>").appendTo('#weeklyScores');
+              
+
             };
         };
       };
 
 
-    function writeSCHEDodd(data, sched) { //writes scheduletable for odd-# leagues (5,7 teams)
+
+function writeWinsAndLosses(data, SCHED,k,l,i){
+      if (eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") > eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")){
+
+        console.log (eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + " first is bigger than second " + eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs"))
+
+        teamIDWin = data[((SCHED[i][k][l])-1)].id;
+        teamIDLose =data[((SCHED[i][k][l+1])-1)].id;
+        teamNameWin = data[((SCHED[i][k][l])-1)].teamName;
+        teamNameLose = data[((SCHED[i][k][l+1])-1)].teamName;
+        $.ajax({
+          url: 'backliftapp/teamInfo/' + teamIDWin,
+          type: "GET",
+          dataType: "json",
+          async: false,
+          success: function(currentTeam) { 
+            //var currentWins = 0;
+            //console.log("totalWins = ",currentTeam.totalWins);
+            currentWins = currentTeam.totalWins;
+            currentWins = (eval(currentWins) + 1); // add one digit
+            console.log("before Ajax " + teamNameWin + " has " + currentWins + " wins")
+            //console.log(teamNameWin + " beat " + teamNameLose)
+            //console.log(teamNameWin +" has " + currentWins +" wins")
+
+            $.ajax({
+              url: 'backliftapp/teamInfo/' + teamIDWin,
+              type: "PUT",
+              dataType: "json",
+              async: false,
+              data: {
+                totalWins: currentWins
+              },
+              success: function(data){
+                //console.log('currentWinsSuccess: ', data.totalWins);
+              }
+            })
+          }
+        })
+//========================================================================
+        // Now the losers............
+//========================================================================        
+        $.ajax({
+          url: 'backliftapp/teamInfo/' + teamIDLose,
+          type: "GET",
+          dataType: "json",
+          async: false,
+          success: function(currentTeam) { 
+            //var currentWins = 0;
+            //console.log("totalWins = ",currentTeam.totalWins);
+            currentLosses = currentTeam.totalLosses;
+            currentLosses = (eval(currentLosses) + 1); // add one digit
+            console.log("before Ajax losses" + teamNameLose + " has " + currentLosses + " wins")
+            //console.log(teamNameWin + " beat " + teamNameLose)
+            //console.log(teamNameWin +" has " + currentWins +" wins")
+
+            $.ajax({
+              url: 'backliftapp/teamInfo/' + teamIDLose,
+              type: "PUT",
+              dataType: "json",
+              async: false,
+              data: {
+                totalLosses: currentLosses
+              },
+              success: function(data){
+                //console.log('currentWinsSuccess: ', data.totalWins);
+              }// end successFunction
+            })// end ajax PUT
+          }// end GET success
+        }) // end ajax GET
+      } // end if statment  
+
+
+      else if (eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1) +"runs") > eval("data[((SCHED[i][k][l])-1)].week0" +(i+1)+"runs")){
+        console.log (eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + " first is SMALLER than second " + eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs"))
+//////////////////////
+        console.log (eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") + " first is bigger than second " + eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs"))
+
+        teamIDWin = data[((SCHED[i][k][l+1])-1)].id;
+        teamIDLose =data[((SCHED[i][k][l])-1)].id;
+        teamNameWin = data[((SCHED[i][k][l+1])-1)].teamName;
+        teamNameLose = data[((SCHED[i][k][l])-1)].teamName;
+        $.ajax({
+          url: 'backliftapp/teamInfo/' + teamIDWin,
+          type: "GET",
+          dataType: "json",
+          async: false,
+          success: function(currentTeam) { 
+            //var currentWins = 0;
+            //console.log("totalWins = ",currentTeam.totalWins);
+            currentWins = currentTeam.totalWins;
+            currentWins = (eval(currentWins) + 1); // add one digit
+            console.log("before Ajax " + teamNameWin + " has " + currentWins + " wins")
+            //console.log(teamNameWin + " beat " + teamNameLose)
+            //console.log(teamNameWin +" has " + currentWins +" wins")
+
+            $.ajax({
+              url: 'backliftapp/teamInfo/' + teamIDWin,
+              type: "PUT",
+              dataType: "json",
+              async: false,
+              data: {
+                totalWins: currentWins
+              },
+              success: function(data){
+                //console.log('currentWinsSuccess: ', data.totalWins);
+              }
+            })
+          }
+        })
+//========================================================================
+        // Now the losers............
+//========================================================================        
+        $.ajax({
+          url: 'backliftapp/teamInfo/' + teamIDLose,
+          type: "GET",
+          dataType: "json",
+          async: false,
+          success: function(currentTeam) { 
+            //var currentWins = 0;
+            //console.log("totalWins = ",currentTeam.totalWins);
+            currentLosses = currentTeam.totalLosses;
+            currentLosses = (eval(currentLosses) + 1); // add one digit
+            console.log("before Ajax losses" + teamNameLose + " has " + currentLosses + " wins")
+            //console.log(teamNameWin + " beat " + teamNameLose)
+            //console.log(teamNameWin +" has " + currentWins +" wins")
+
+            $.ajax({
+              url: 'backliftapp/teamInfo/' + teamIDLose,
+              type: "PUT",
+              dataType: "json",
+              async: false,
+              data: {
+                totalLosses: currentLosses
+              },
+              success: function(data){
+                //console.log('currentWinsSuccess: ', data.totalWins);
+              }// end successFunction
+            })// end ajax PUT
+          }// end GET success
+        }) // end ajax GET
+      } // end if statment 
+/////////////////////
+      //}
+} // END: function writeWinsAndLosses 
+
+
+
+
+
+
+
+
+
+
+
+    function writeSCHEDodd(data, SCHED) { //writes scheduletable for odd-# leagues (5,7 teams)
       $("<tr><th>Week</th><th>Home Team</th><th>Runs</th><th>Runs</th><th>Away Team</th></tr>").appendTo('#weeklyScores');
         console.log("SCHED.length = " + SCHED.length)
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
@@ -522,6 +703,8 @@ function writeSCHEDeven(data, SCHED) { //writes scheduletable for even-# leagues
             };        
         };
       };
+
+
 
 // ==================================================
 // Create a new Team? if the team count is less >=8 show new team modal, if not show tooFewTeams modal
