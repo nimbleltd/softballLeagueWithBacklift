@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -31,21 +32,11 @@
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-<!--             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span> -->
           </button>
           <a class="brand" href="./index.html"><!-- Bootstrap --></a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-<!--               <li class="">
-                <a href="./index.html">Home</a>
-              </li> -->
               <li class="">
-                <!-- <a href="./getting-started.html">Add Your Team</a> -->
-
-                <!-- <a href= "#myModal" data-target= "#create_team" data-toggle="modal">Add Your Team</a> -->
-
                 <a href= "#" onclick="howManyTeams()">Add Your Team</a>
 
               </li>
@@ -55,16 +46,6 @@
               <li class="">
                 <a href="#weeklyScores">Weekly Scores</a>
               </li>
-<!--               <li class="active">
-                <a href="./components.html">Team Page</a>
-              </li> -->
-<!--               <li class="dropdown-submenu">
-                <a href="./customize.html">Dropdown</a>
-                	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                		<li><a tabindex="-1" href="#">Action</a></li>
-    					<li><a tabindex="-1" href="#">Another action</a></li>
-    					<li><a tabindex="-1" href="#">Something else here</a></li>
-              </li> -->
             </ul>
           </div>
         </div>
@@ -421,25 +402,15 @@ function populateWeeklyScores(team){
       console.log("data.length: " + data.length)
       if (data.length===4){
         SCHED = sched4;
-        // console.log("inside 4");
-        // console.log(SCHED);
       }
       else if ((data.length === 5) || (data.length === 6)){
         SCHED = sched6;
-        // console.log("inside 5 and 6");
-        // console.log(SCHED);
-        // console.log("data.length= " + data.length);
       }
       else if ((data.length === 7) || (data.length === 8)){
         SCHED = sched8;
-        // console.log("inside 7 & 8");
-        // console.log(SCHED);
       }
       if (data.length % 2 === 0) {
         billy = data.length % 2;
-        // console.log("billy = " + billy)
-        // console.log("even write SCHED")
-        // console.log("in EVENSCHEDLOOP data = " + data)
         writeSCHEDeven(even, SCHED)
       }
       else {
@@ -451,13 +422,12 @@ function populateWeeklyScores(team){
   //"").appendTo('weeklyScores');
 } //end function
 
-function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# leagues (4,6,8 teams)
-  //console.log("allTeams = ", data); 
+//writes schedule table for even-# leagues (4,6,8 teams)
+function writeSCHEDeven(data, SCHED) { 
   
   //This resets all Wins and Losses to ZERO
   for (var clearScores = 0; clearScores < data.length; clearScores++){
     teamID = data[clearScores].id;
-    //console.log("teamID = ", teamID);
     $.ajax({
       url: 'backliftapp/teamInfo/' + teamID,
       type: "PUT",
@@ -474,7 +444,6 @@ function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# league
 
 
   $("<tr><th><h4>Week</h4></th><th><h4>Home Team</h4></th><th><h4>Runs</h4></th><th><h4>Runs</h4></th><th><h4>Away Team</h4></th></tr>").appendTo('#weeklyScores');
-        //teamID = data[clearScores].id;
         for (var i = 0; i < SCHED.length; i++) {   //weeks loop
           if (data.length === 4){
             var numOfGamesEachWeek = 1;
@@ -485,7 +454,8 @@ function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# league
           else if (data.length === 8){
             var numOfGamesEachWeek = 3;
           }
-            for (var k =0; k < (SCHED.length-numOfGamesEachWeek); k++) { //loop within a loop
+          //loop within a loop
+            for (var k =0; k < (SCHED.length-numOfGamesEachWeek); k++) { 
               var l = 0; //alternates between home and away team.teamName
               writeWinsAndLosses(data, SCHED,k,l,i)
               $("<tr><td>"+(i+1)+"</td><td>" +
@@ -498,8 +468,6 @@ function writeSCHEDeven(data, SCHED) { //writes schedule table for even-# league
             };
         };
       };
-
-
 
 function writeWinsAndLosses(data, SCHED,k,l,i){
       if (eval("data[((SCHED[i][k][l])-1)].week0" +(i+1) +"runs") > eval("data[((SCHED[i][k][l+1])-1)].week0" +(i+1)+"runs")){
@@ -516,13 +484,9 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
           dataType: "json",
           async: false,
           success: function(currentTeam) { 
-            //var currentWins = 0;
-            //console.log("totalWins = ",currentTeam.totalWins);
             currentWins = currentTeam.totalWins;
             currentWins = (eval(currentWins) + 1); // add one digit
             console.log("before Ajax " + teamNameWin + " has " + currentWins + " wins")
-            //console.log(teamNameWin + " beat " + teamNameLose)
-            //console.log(teamNameWin +" has " + currentWins +" wins")
 
             $.ajax({
               url: 'backliftapp/teamInfo/' + teamIDWin,
@@ -533,7 +497,6 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
                 totalWins: currentWins
               },
               success: function(data){
-                //console.log('currentWinsSuccess: ', data.totalWins);
               }
             })
           }
@@ -547,13 +510,9 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
           dataType: "json",
           async: false,
           success: function(currentTeam) { 
-            //var currentWins = 0;
-            //console.log("totalWins = ",currentTeam.totalWins);
             currentLosses = currentTeam.totalLosses;
             currentLosses = (eval(currentLosses) + 1); // add one digit
             console.log("before Ajax losses" + teamNameLose + " has " + currentLosses + " wins")
-            //console.log(teamNameWin + " beat " + teamNameLose)
-            //console.log(teamNameWin +" has " + currentWins +" wins")
 
             $.ajax({
               url: 'backliftapp/teamInfo/' + teamIDLose,
@@ -587,13 +546,9 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
           dataType: "json",
           async: false,
           success: function(currentTeam) { 
-            //var currentWins = 0;
-            //console.log("totalWins = ",currentTeam.totalWins);
             currentWins = currentTeam.totalWins;
             currentWins = (eval(currentWins) + 1); // add one digit
             console.log("before Ajax " + teamNameWin + " has " + currentWins + " wins")
-            //console.log(teamNameWin + " beat " + teamNameLose)
-            //console.log(teamNameWin +" has " + currentWins +" wins")
 
             $.ajax({
               url: 'backliftapp/teamInfo/' + teamIDWin,
@@ -604,7 +559,6 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
                 totalWins: currentWins
               },
               success: function(data){
-                //console.log('currentWinsSuccess: ', data.totalWins);
               }
             })
           }
@@ -618,13 +572,9 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
           dataType: "json",
           async: false,
           success: function(currentTeam) { 
-            //var currentWins = 0;
-            //console.log("totalWins = ",currentTeam.totalWins);
             currentLosses = currentTeam.totalLosses;
             currentLosses = (eval(currentLosses) + 1); // add one digit
             console.log("before Ajax losses" + teamNameLose + " has " + currentLosses + " wins")
-            //console.log(teamNameWin + " beat " + teamNameLose)
-            //console.log(teamNameWin +" has " + currentWins +" wins")
 
             $.ajax({
               url: 'backliftapp/teamInfo/' + teamIDLose,
@@ -635,7 +585,6 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
                 totalLosses: currentLosses
               },
               success: function(data){
-                //console.log('currentWinsSuccess: ', data.totalWins);
               }// end successFunction
             })// end ajax PUT
           }// end GET success
@@ -678,7 +627,6 @@ function writeWinsAndLosses(data, SCHED,k,l,i){
 function addTeamToTable(team) {
   $(
      "<tr>" +
-    // "<td>" + team.id + "</td>" +
     // Deleted the non-needed information 
     "<td><span rel='popover' class='show link' data-original-title='Team Info' data-content='Manager: " + team.firstName + " " + team.lastName + "<br/>Phone: " + team.phone + "<br/>Sponsor: " + team.sponsor + "<br/>Zipcode: " + team.zipcode + "'>" + team.teamName + "</span></td>" +
     "<td>" + team.totalWins + "</td>" +
